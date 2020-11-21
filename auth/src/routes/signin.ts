@@ -1,8 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { BadRequestError } from "../errors/bad-requst-error";
-import { validateRequest } from "../middlewares/validate-req";
+import { BadRequestError, validateRequest } from "@ticketsam/common";
 import { User } from "../models/user.model";
 import { Password } from "../services/password";
 
