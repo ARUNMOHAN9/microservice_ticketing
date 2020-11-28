@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { requireAuth, validateRequest } from "@ticketsam/common";
 import { body } from "express-validator";
+import { Ticket } from "../models/ticket";
 
 const router = express.Router();
 
@@ -9,11 +10,20 @@ router.post(
   requireAuth,
   [
     body("title").not().isEmpty().withMessage("Valid title required"),
-    body("title").isFloat({ gt: 0 }).withMessage("Valid price required"),
+    body("price").isFloat({ gt: 0 }).withMessage("Valid price required"),
   ],
   validateRequest,
-  (req: Request, res: Response) => {
-    res.sendStatus(200);
+  async (req: Request, res: Response) => {
+    const {title, price} = req.body;
+
+    const ticket = Ticket.build({
+      title: title,
+      price: price,
+      userId: req.currentUser!.id
+    });
+
+    await ticket.save();
+    res.status(201).send(ticket);
   }
 );
 
